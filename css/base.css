@@ -40,6 +40,10 @@ label[for='toggle-all'] {
     display:none;
 }
 
+#leftBlock {
+   padding-top: 40px;	
+}
+
 .question-block {
 	padding:10px 0px;
 }

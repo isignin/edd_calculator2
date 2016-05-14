@@ -26,8 +26,12 @@ class InputView extends Backbone.View
     else
       lmp_date = ""
 
-  lmpDateUnknown: (e) ->
-    if($(this).is(':checked')) then $("#lmp_date").val("")
+  lmpDateUnknown: (e) =>
+    if($('#lmp_date_unknown').is(':checked')) 
+      console.log("Unknown change")
+      $("#lmp_date").val("").prop('disabled', true)
+    else
+      $("#lmp_date").prop('disabled', false)
 
   eddUS: (e) ->
     edd_us = @convertToDate('#edd_us')
@@ -80,8 +84,7 @@ class InputView extends Backbone.View
 
   render: =>
     @$el.html "
-       <div class='col-xs-5 col-md-5'>
-          <div class='question-block'> </div><br />
+       <div class='col-xs-5 col-md-5' id='leftBlock'>
           <div class='question-block'>
             <div class='question' id='today'>Today's Date: </div>
             <input type='text' id='current_date' readonly>
