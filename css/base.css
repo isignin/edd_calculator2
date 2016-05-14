@@ -1,0 +1,267 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: #eaeaea url('/images/bg.png');
+  color: #4d4d4d;
+}
+
+label[for='toggle-all'] {
+  display: none;
+}
+
+/*
+  Hack to remove background from Mobile Safari.
+  Can't use it globally since it destroys checkboxes in Firefox and Opera
+*/
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  #toggle-all,
+  #todo-list li .toggle {
+    background: none;
+  }
+
+  #todo-list li .toggle {
+    height: 40px;
+  }
+
+  #toggle-all {
+    top: -56px;
+    left: -15px;
+    width: 65px;
+    height: 41px;
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
+    -webkit-appearance: none;
+    appearance: none;
+  }
+}
+
+.hidden{
+    display:none;
+}
+
+.question-block {
+	padding:10px 0px;
+}
+
+.question{
+	font-weight: bold;
+}
+
+
+#calc_result {
+    padding: 10px 10px 10px 50px;
+    border: 1px solid #C0C9BF;
+	width: 300px;
+	margin-top: 40px;
+    -moz-box-shadow: 0.2em 0.2em 0.5em rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0.2em 0.2em 0.5em rgba(0, 0, 0, 0.3);
+    filter: progid: DXImageTransform.Microsoft.dropshadow(OffX=4, OffY=4, Color='#efefef', Positive='true');
+    background-color: #fff;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    background: -webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ffffff), color-stop(1, #D1D6D0) );
+    background: -moz-linear-gradient( center top, #ffffff 5%, #D1D6D0 100% );
+    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#D1D6D0');
+/*    margin-left: auto;
+	margin-right: auto;  */
+    -webkit-transition: all .3s ease-in-out;
+    -moz-transition: all .3s ease-in-out;
+    -ms-transition: all .3s ease-in-out;
+}
+
+#calc_result table {
+    margin: auto;
+    color: #C0C9BF;
+    min-width: 65%;
+}
+
+#calc_result table .medCalcFontOneBold {
+    font-weight: bold;
+    color: #000;
+}
+
+#calc_result textarea {
+    /* width: 255px;*/
+    resize: none;
+    overflow: auto;
+    /* min-height: 100px; */
+    padding: 3px;
+    line-height: 1.3;
+}
+
+#calc_result .calc_inputbox {
+    border: none;
+    font-weight: bold;
+    font-size: 1.3em;
+    text-align: right;
+    width: 75px;
+    background: none;
+    font-family: Arial, Helvetica, sans-serif;
+    border-bottom: 1px dotted #cecece;
+}
+
+.spacer {
+    clear: both;
+}
+#calc-type {
+	margin: -10px 0 10px 10px;
+	float: left;
+}
+
+#input_box {
+	border: 1px solid;
+	padding:25px;
+	background: #fff;
+	width: 600px;
+}
+
+.result_input, #current_date {
+	background-color: #E6E68A;
+	padding: 0 10px;
+	height: 30px;
+}
+
+.visits {
+	width: 125px;
+}
+
+#schedules {
+	border: 1px solid;
+	padding: 10px;
+}
+th {
+	background: #DFF0D8;
+}
+td.schedule {
+	background: #fff;
+}
+
+div#logo {
+	margin-top: 40px;
+}
+
+#main_title {
+	color: #730723;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+#errorMsg{
+	margin: 20px;
+	display: none;
+}
+
+h3#results {
+	margin-top: 5px;
+}
+
+.result-block {
+	padding: 5px 0px;
+}
+
+#menuButtons {
+  margin: 10px 15px 0 0;
+  float: right;	
+}
+
+img#help, #english, #french, #spanish {
+	float: left;
+	margin: -20px 0px 20px 5px;
+	height: 30px;
+	width: 30px;
+	cursor: pointer;
+}
+
+#english, #french, #spanish {
+	display: none;
+}
+
+img#sync {
+	float: left;
+	margin: -22px 0px 20px 5px;
+	width: 34px;
+	height: 34px;
+	cursor: pointer;
+}
+
+img#full-list {
+   width: 34px;
+   height:34px;
+   cursor:pointer;	
+}
+
+.green-style {
+    color: green;
+    font-weight: bold;	
+}
+
+.red-style {
+   color: red;
+   font-weight: bold;	
+}
+
+
+#helpModal {
+	top: 5%;
+}
+
+#current_date {
+	width: 160px;
+}
+
+#ga_us_weeks, #ga_us_days {
+	width: 40px;
+}
+
+#ga_lmp_section {
+	display: none;
+}
+
+.aspQ {
+	font-size: 0.8em;
+	color: #A94442;
+	font-weight: normal;
+}
+
+#eligible-msg {
+   border: 1px solid;
+   padding: 5px;
+   display: none;	
+}
+
+#listings, #bp_monitor, #hb_monitor {
+	border: 1px solid; padding: 3px;
+	margin-bottom: 10px;
+}
+
+#home_visit {
+	min-height:700px;
+}
+
+#dose-final {
+	border: 1px solid;
+	padding: 5px;
+}
+	
+#final-dose {
+	color: red;
+	font-weight: bold;
+}
+
+.f-l-mr-10 {
+	float: left;
+	margin-right: 10px;
+}
+.border-1 {
+	border: 1px solid;
+}
+
+/*
+@media screen and (min-width: 768px) {
+	
+	#helpModal .modal-dialog  {width:700px;}
+
+}
+*/

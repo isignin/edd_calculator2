@@ -1,0 +1,35 @@
+{
+  "name": "edd_calculator",
+  "version": "2.0.0",
+  "description": "Calculator for Expected Delivery Date for expecting mothers",
+  "scripts": {
+    "dev": "npm run watch & npm run livereload & npm run static",
+    "watch": "watchify -v -t coffeeify --debug --extension='.coffee' app/start.coffee -o bundle.js",
+    "livereload": "livereloadify ./",
+    "static": "static --port 8080 ./",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Stephen Loo",
+  "license": "ISC",
+  "dependencies": {
+    "backbone": "1.2.1",
+    "bootstrap": "^3.3.6",
+    "coffee-script": "^1.9.3",
+    "coffeeify": "^1.1.0",
+    "dialog-polyfill": "^0.4.3",
+    "jquery": "^2.1.4",
+    "jquery-ui": "^1.10.5",
+    "js-cookie": "^2.1.1",
+    "livereloadify": "^2.0.0",
+    "moment": "^2.10.3",
+    "node-static": "^0.7.7",
+    "pikaday": "^1.4.0",
+    "underscore": "^1.8.3",
+    "underscore.string": "^3.2.2",
+    "watchify": "^3.6.1"
+  },
+  "devDependencies": {
+    "browserify": "^13.0.1",
+    "browserify-shim": "^3.8.12"
+  }
+}
