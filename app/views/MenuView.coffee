@@ -8,8 +8,8 @@ class MenuView extends Backbone.View
   el: "#menuHeader"
 
   events:
-    "click button#initial": "initial"
-    "click button#initial": "randomization"
+    "click button#initial.btn": "initial"
+    "click button#randomization.btn": "randomization"
     "click img#english": "english"
     "click img#french": "french"
     "click img#spanish": "spanish"
