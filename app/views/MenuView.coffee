@@ -16,7 +16,7 @@ class MenuView extends Backbone.View
     "click img#spanish": "spanish"
     "click img#sync": "sync"
     "click img#help": "help"
-
+          
   initial: (e) ->
     $(".fullCalculator").slideUp()
     $("#ga_lmp_section").show()
@@ -46,7 +46,7 @@ class MenuView extends Backbone.View
 	
   help: (e) =>
     e.preventDefault	
-
+      
   changeLanguage: (lang) ->
     $("#spanish").show()
     $("#english").show()
@@ -56,7 +56,7 @@ class MenuView extends Backbone.View
       when 'Fr' then $("#french").hide()
       when 'Es'then $("#spanish").hide()
       else $("#english").hide()
-    $("#errorMsg").hide();
+    $("#errorAlert").hide();
     Cookies.set("language",lang, 365);
     Env.currentLang = lang;
     App.curLang = Common.languageSwitch(lang)

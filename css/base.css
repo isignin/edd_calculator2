@@ -52,6 +52,9 @@ label[for='toggle-all'] {
 	font-weight: bold;
 }
 
+button#initial, button#randomization {
+  font-size: 14px;
+}
 
 #calc_result {
     padding: 10px 10px 10px 50px;
@@ -110,7 +113,7 @@ label[for='toggle-all'] {
     clear: both;
 }
 #calc-type {
-	margin: -10px 0 10px 10px;
+	margin: -10px 0 10px;
 	float: left;
 }
 
@@ -152,8 +155,10 @@ div#logo {
 	margin-bottom: 10px;
 }
 
-#errorMsg{
+#errorAlert{
 	margin: 20px;
+  padding: 7px;
+	border: 1px solid red;
 	display: none;
 }
 

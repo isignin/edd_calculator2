@@ -14,7 +14,7 @@ bootstrap = require 'bootstrap'
 MenuView = require "./views/MenuView"
 InputView = require './views/InputView'
 ResultView = require './views/ResultView'
-#Localization = require './Localization'
+AlertView = require './views/AlertView'
 Common = require './Common'
 
 global.Env = {
@@ -37,6 +37,9 @@ resultView.render()
 
 menuView = new MenuView
 menuView.render()
+
+alertView = new AlertView
+alertView.render()
 
 menuView.changeLanguage(Env.currentLang)
 

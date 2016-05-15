@@ -4,6 +4,7 @@ Backbone = require 'backbone'
 Backbone.$  = $
 moment = require 'moment'
 Pikaday = require 'pikaday'
+AlertView = require './AlertView'
 
 class InputView extends Backbone.View
   el: "#inputBlock"
@@ -15,7 +16,7 @@ class InputView extends Backbone.View
     "change #lmp_date": "convertLMPDate"
     "change #lmp_date_unknown": "lmpDateUnknown"
     "change #edd_us": "eddUS"
-
+          
   convertRandomizeDate: (e) ->
     if($("#randomize_date").val() != "" ) then randomize_date = @convertToDate('#randomize_date')
 
@@ -28,7 +29,6 @@ class InputView extends Backbone.View
 
   lmpDateUnknown: (e) =>
     if($('#lmp_date_unknown').is(':checked')) 
-      console.log("Unknown change")
       $("#lmp_date").val("").prop('disabled', true)
     else
       $("#lmp_date").prop('disabled', false)
@@ -39,22 +39,23 @@ class InputView extends Backbone.View
   calculate: (e) =>
     if(Env.LMPOnly)
       if ($('#lmp_date').val() != "")
-        edd_lmp = lmp_date =  @convertToDate('#lmp_date')
-        edd_lmp.add(280,'days')
+        lmp_date =  @convertToDate('#lmp_date')
+        edd_lmp = lmp_date.clone().add(280,'days')
         ga_lmp = current_date.diff(lmp_date, 'days')
         $("#edd_lmp").val(format_date_as_string(edd_lmp))
         $("#ga_lmp").val(getGestationalAgeStr(ga_lmp))
       else
-        displayErrorMsg(curLang.errorMsg9)
+        AlertView.displayErrorMsg(curLang.errorMsg9)
     else
-      if (@validateInputs())
+      if (@validateInputs(App.curLang))
         if ($("#lmp_date_unknown").is(":checked"))
           ga_lmp = 0
           edd_lmp = "Unknown"
           $("#edd_lmp").val(edd_lmp)
         else
-          edd_lmp = lmp_date =  @convertToDate('#lmp_date')
-          edd_lmp.add(280,'days')
+          lmp_date =  @convertToDate('#lmp_date')
+          edd_lmp = lmp_date.clone().add(280,'days')
+          console.log(edd_lmp.instanceOf Object)
           ga_lmp = current_date.diff(lmp_date, 'days')
           $("#edd_lmp").val(format_date_as_string(edd_lmp))
           $("#ga_lmp").val(getGestationalAgeStr(ga_lmp))
@@ -64,12 +65,12 @@ class InputView extends Backbone.View
         lmp_us.subtract(ga_us, 'days')
         edd_us = lmp_us
         edd_us.add(280, 'days')
-        $("#errorMsg").hide()
+        $("#errorAlert").hide()
         edd_choice_update()
         eligibility()
       else
         $(".result_input").val("")
-        $("#errorMsg").show()
+        $("#errorAlert").show()
 
   clear: (e) =>
     $(".result_input").val("")
@@ -79,7 +80,7 @@ class InputView extends Backbone.View
     $("#patient-kit").html("")
     $("#lmp_date_unknown").prop('checked', false)
     $("#eligible-msg").hide()
-    $("#errorMsg").hide()
+    $("#errorAlert").hide()
     $("#no_dates").html(Env.currentLang.comment1)
 
   render: =>
@@ -137,46 +138,39 @@ class InputView extends Backbone.View
     $('#current_date').val(Env.currentDate)
 
   convertToDate: (cdate) ->
-    moment($(cdate).val()).format(Env.dateFormat) 
+    moment($(cdate).val(), Env.dateFormat) 
 
-  validateInputs: () ->
+  validateInputs: (curLang) ->
     valid_input = true
     errMsg = ""
-    if ($("#lmp_date").val() == "" && !($("#lmp_date_unknown").is(':checked')))
-      errMsg = errMsg + "[ "+curLang.errorMsg1+" ] "
+    if ($("#lmp_date").val() == "" && !($("#lmp_date_unknown").is(':checked'))) then errMsg = errMsg + "[ #{curLang.errorMsg1} ] "
     if ($("#us_date").val() == "")
-      errMsg = errMsg + "[ "+curLang.errorMsg2+" ] "
+      errMsg = errMsg + "[ #{curLang.errorMsg2} ] "
     else
-      us_date = @convertToDate($('#us_date').val())
-      if (moment(us_date).valueOf() > moment(current_date).valueOf())
-        errMsg = errMsg + "[ "+curLang.errorMsg6+" ]"
+      us_date = @convertToDate('#us_date')
+      if (us_date.isAfter(moment(current_date),'day')) then errMsg = errMsg + "[ #{curLang.errorMsg6} ]"
+
     if ($("#ga_us_weeks").val() == "" || $("#ga_us_days").val() == "")
-      errMsg = errMsg + "[ "+curLang.errorMsg3+" ] "
+      errMsg = errMsg + "[ #{curLang.errorMsg3} ] "
     else
       ga_wks = parseInt($("#ga_us_weeks").val())
       ga_days = parseInt($("#ga_us_days").val())
       if(ga_wks < 6 || ga_wks > 14)
-        errMsg = errMsg + "[ "+curLang.errorMsg7+" ] "
-      if (ga_days < 0 || ga_days > 6)
-        errMsg = errMsg + "[ "+curLang.errorMsg8+" ] "
+        errMsg = errMsg + "[ #{curLang.errorMsg7} ] "
+      if (ga_days < 0 || ga_days > 6) then errMsg = errMsg + "[ #{curLang.errorMsg8} ] "
       else
-        if (ga_wks == 14 && ga_days == 6)
-          errMsg = errMsg + "[ "+curLang.errorMsg8+" ]"
+        if (ga_wks == 14 && ga_days == 6) then errMsg = errMsg + "[ #{curLang.errorMsg8} ]"
 
     if ($("#randomize_date").val() == "")
-      errMsg = errMsg + "[ "+curLang.errorMsg4+" ] "
+      errMsg = errMsg + "[ #{curLang.errorMsg4} ] "
     else
-      randomize_date = @convertToDate($('#randomize_date').val())
-      if (moment(randomize_date).valueOf() < moment(current_date).valueOf())
-        errMsg = errMsg + "[ "+curLang.errorMsg5+" ]" 
+      randomize_date = @convertToDate('#randomize_date')
+      if (moment(current_date, Env.dateFormat).isAfter(moment(randomize_date),'day')) then errMsg = errMsg + "[ #{curLang.errorMsg5} ]" 
 
-    if (errMsg !="") then valid_input = false
-    
-    @displayErrorMsg(errMsg)
+    if (errMsg !="")
+      valid_input = false
+      AlertView.displayErrorMsg(errMsg)
+      
     return valid_input;
-
-  displayErrorMsg: (msg) ->
-    $("span#myAlert").text(msg)
-    $(".errorMsg").show()
  
 module.exports = InputView
