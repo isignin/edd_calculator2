@@ -3,6 +3,7 @@ $ = require 'jquery'
 Backbone = require 'backbone'
 Backbone.$  = $
 Cookies = require 'js-cookie'
+Common = require '../Common'
 
 class MenuView extends Backbone.View
   el: "#menuHeader"
@@ -58,6 +59,8 @@ class MenuView extends Backbone.View
     $("#errorMsg").hide();
     Cookies.set("language",lang, 365);
     Env.currentLang = lang;
+    App.curLang = Common.languageSwitch(lang)
+    @languageDisplay(App.curLang)
     $("#html-text").load("help-#{lang.lowercase}.html");
 
   render: =>
@@ -74,4 +77,53 @@ class MenuView extends Backbone.View
              <a data-toggle='modal' data-target='#helpModal'><img src='images/help_icon.png' id='help' title='Click for Instructions'></a> 
           </div>
     "
+  languageDisplay: (curLang) ->
+    $("#appTitle").html(curLang.title1)
+    $("#results").html(curLang.title2)
+    $("#initial").html(curLang.button1)
+    $("#randomization").html(curLang.button2)
+    $("#calculate").html(curLang.button3)
+    $("#clear").html(curLang.button4)
+    $("#today").html(curLang.inputLabel1)
+    $("#LMPDate").html(curLang.inputLabel2)
+    $("#unknown").html(curLang.inputLabel3)
+    $("#USDate").html(curLang.inputLabel4)
+    $("#GA-US").html(curLang.inputLabel5)
+    $("#DateRandomization").html(curLang.inputLabel8)
+    $("#labelWeeks").html(curLang.inputLabel6)
+    $("#labelDays").html(curLang.inputLabel7)
+    $(".word-or").html(curLang.wordOR)
+    $(".word-and").html(curLang.wordAND)
+    $("#participant").html(curLang.idCARD)
+    $("#resultLabel1").html(curLang.resultLabel1)
+    $("#resultLabel2").html(curLang.resultLabel2)
+    $("#resultLabel3").html(curLang.resultLabel3)
+    $("#resultLabel4").html(curLang.resultLabel4)
+    $("#resultLabel5").html(curLang.resultLabel5)
+    $("#resultLabel6").html(curLang.resultLabel6) 
+    $("#resultLabel8").html(curLang.resultLabel8)
+    $(".labelVisit").html(curLang.resultLabel7)
+    $("#visitModalLabel").html(curLang.title3)
+    $("#biweekly_title").html(curLang.title4)
+    $("#bp_monitoring").html(curLang.title5)
+    $("#hb_monitoring").html(curLang.title6)
+    $("#visit_no").html(curLang.visitNo)
+    $(".visit_planned").html(curLang.plannedDate)
+    $("#no_dates").html(curLang.comment1)
+    $(".monitor_visit").html(curLang.resultLabel7)
+    $(".visit_planned").html(curLang.plannedDate)
+    $("#label9").html(curLang.resultLabel9)
+    $(".weeks").html(curLang.weeks)
+    $("#bp_monitor0").html(curLang.bp_monitor0)
+    $("#hb_monitor0").html(curLang.hb_monitor0)
+    $("#hb_monitor1").html(curLang.hb_monitor1)
+    $("#hb_monitor2").html(curLang.hb_monitor2)
+    $("#error").html(curLang.error)
+#    if (typeof ga_proj != "undefined") then $('#gestational_age_proj').val(Common.getGestationalAgeStr(ga_proj))
+#    if (typeof ga_lmp != "undefined") then $("#ga_lmp").val(Common.getGestationalAgeStr(ga_lmp))
+#    if (typeof eligible != "undefined") then patient_kit(eligible)
+    $(".close-btn").html(curLang.close)
+    $("#instructions").html(curLang.instructions)
+#    $.datepicker.setDefaults($.datepicker.regional[curLang.name.toLowerCase()])
+
 module.exports = MenuView
