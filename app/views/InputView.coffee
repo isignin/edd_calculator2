@@ -5,8 +5,11 @@ Backbone.$  = $
 moment = require 'moment'
 Pikaday = require 'pikaday'
 AlertView = require './AlertView'
+Common = require '../Common'
 
 class InputView extends Backbone.View
+  us_date = ""
+  
   el: "#inputBlock"
 
   events:
@@ -41,13 +44,14 @@ class InputView extends Backbone.View
       if ($('#lmp_date').val() != "")
         lmp_date =  @convertToDate('#lmp_date')
         edd_lmp = lmp_date.clone().add(280,'days')
-        ga_lmp = current_date.diff(lmp_date, 'days')
-        $("#edd_lmp").val(format_date_as_string(edd_lmp))
-        $("#ga_lmp").val(getGestationalAgeStr(ga_lmp))
+        ga_lmp = moment(current_date, Env.dateFormat).diff(lmp_date, 'days')
+        $("#edd_lmp").val(Common.format_date_as_string(edd_lmp))
+        $("#ga_lmp").val(Common.getGestationalAgeStr(ga_lmp))
       else
         AlertView.displayErrorMsg(curLang.errorMsg9)
     else
       if (@validateInputs(App.curLang))
+        console.log(us_date)
         if ($("#lmp_date_unknown").is(":checked"))
           ga_lmp = 0
           edd_lmp = "Unknown"
@@ -55,12 +59,11 @@ class InputView extends Backbone.View
         else
           lmp_date =  @convertToDate('#lmp_date')
           edd_lmp = lmp_date.clone().add(280,'days')
-          console.log(edd_lmp.instanceOf Object)
-          ga_lmp = current_date.diff(lmp_date, 'days')
-          $("#edd_lmp").val(format_date_as_string(edd_lmp))
-          $("#ga_lmp").val(getGestationalAgeStr(ga_lmp))
+          ga_lmp = moment(current_date).diff(lmp_date, 'days')
+          $("#edd_lmp").val(Common.format_date_as_string(edd_lmp))
+          $("#ga_lmp").val(Common.getGestationalAgeStr(ga_lmp))
         ga_us = (parseInt($("#ga_us_weeks").val())*7)+parseInt($("#ga_us_days").val())
-        ga_us_proj = ga_us + current_date.diff(us_date, 'days')
+        ga_us_proj = ga_us + moment(current_date, Env.dateFormat).diff(us_date, 'days')
         lmp_us = us_date
         lmp_us.subtract(ga_us, 'days')
         edd_us = lmp_us
@@ -123,16 +126,19 @@ class InputView extends Backbone.View
     lmpDatePicker = new Pikaday
       field: $('.datepicker')[0]
       position: 'bottom right'
+      format: 'DD-MM-YYYY'
       reposition: false
 
     usDatePicker = new Pikaday
       field: $('.datepicker')[1]
       position: 'bottom right'
+      format: 'DD-MM-YYYY'
       reposition: false
 
     randomizeDatePicker = new Pikaday
       field: $('.datepicker')[2]
       position: 'bottom right'
+      format: 'DD-MM-YYYY'
       reposition: false
 
     $('#current_date').val(Env.currentDate)

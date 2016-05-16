@@ -2,6 +2,7 @@ _ = require 'underscore'
 $ = require 'jquery'
 Backbone = require 'backbone'
 Backbone.$  = $
+Common = require '../Common'
 
 class ResultView extends Backbone.View
   el: "#resultBlock"
@@ -61,4 +62,24 @@ class ResultView extends Backbone.View
 		   <div class='col-xs-1 col-md-1'></div>  
 		  </div>
     "
+    edd_choice_update: () ->
+      if (edd_lmp == "Unknown")
+        edd_projected = edd_us
+      else
+        lmp_gestational_week = Math.floor(ga_lmp / 7)
+        days_diff = Math.abs(ga_lmp - ga_us_proj)	  
+        switch true
+          when (lmp_gestational_week < 9) then edd_projected = days_diff <= 5 ? edd_lmp : edd_us
+          when (lmp_gestational_week >= 9 && lmp_gestational_week < 14)
+            if edd_projected = days_diff <= 7 then edd_lmp else edd_us
+          else edd_projected = edd_us
+
+      ga_proj = if (edd_projected == edd_us) then ga_us_proj else ga_lmp
+      last_day_to_randomize = minusDays(edd_projected, 183)
+      $('#gestational_age_proj').val(Common.getGestationalAgeStr(ga_proj))
+      $('#edd_projected').val(Common.format_date_as_string(edd_projected))
+      $('#last_randomization_date').val(Common.format_date_as_string(last_day_to_randomize))
+  	  biweekly_visits()
+    }
+    
 module.exports = ResultView
