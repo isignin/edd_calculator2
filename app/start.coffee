@@ -11,30 +11,22 @@ Cookies = require 'js-cookie'
 moment = require 'moment'
 bootstrap = require 'bootstrap'
 
+Router = require './Router'
 MenuView = require "./views/MenuView"
-InputView = require './views/InputView'
-ResultView = require './views/ResultView'
+DashboardView = require './views/DashboardView'
 AlertView = require './views/AlertView'
 Common = require './Common'
 
-global.Env = {
-   dateFormat: Cookies.get('dateFormat') || 'DD-MM-YYYY'
-   currentLang: Cookies.get('language') || 'En'
-   currentDate: ""
-   LMPOnly: false	
-}
-Env.currentDate = moment().format(Env.dateFormat)
 global.App = {}
-App.curLang = Common.languageSwitch(Env.currentLang)
+global.Env =  
+  dateFormat: Cookies.get('dateFormat') || 'DD-MM-YYYY'
+  currentLang: Cookies.get('language') || 'En'
+  LMPOnly: false	
 
+Env.currentDate = moment().format(Env.dateFormat)
+console.log(Env)
+debugger
 # These are the views that will always be shown
-
-inputView = new InputView
-inputView.render()
-
-resultView = new ResultView
-resultView.render()
-
 menuView = new MenuView
 menuView.render()
 

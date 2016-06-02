@@ -51,7 +51,6 @@ class InputView extends Backbone.View
         AlertView.displayErrorMsg(curLang.errorMsg9)
     else
       if (@validateInputs(App.curLang))
-        console.log(us_date)
         if ($("#lmp_date_unknown").is(":checked"))
           ga_lmp = 0
           edd_lmp = "Unknown"
@@ -170,7 +169,7 @@ class InputView extends Backbone.View
     if ($("#randomize_date").val() == "")
       errMsg = errMsg + "[ #{curLang.errorMsg4} ] "
     else
-      randomize_date = @convertToDate('#randomize_date')
+      App.randomize_date = @convertToDate('#randomize_date')
       if (moment(current_date, Env.dateFormat).isAfter(moment(randomize_date),'day')) then errMsg = errMsg + "[ #{curLang.errorMsg5} ]" 
 
     if (errMsg !="")

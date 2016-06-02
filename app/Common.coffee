@@ -17,28 +17,52 @@ class Common
   @format_date_as_string: (tdate) ->
     return moment(tdate, Env.dateFormat)
 
-  @biweekly_visits: () ->
-    final_dose = @format_date_as_string(minusDays(edd_projected, 4*7))
-    bw = [];
-    for (var i = 1; i < 16; i++)
-      var bwv = addDays(randomize_date, i*14)
-      bw[i] = format_date_as_string(bwv)
+  @biweekly_visits: (options) ->
+    edd_projected = options.edd_projected
+    randomize_date = options.randomize_date
+    final_dose = @format_date_as_string(edd_projected.subtract(4*7, 'days').format('DD-MM-YYYY'))
+    bw = []
+    for i in [1..15]
+      bwv = randomize_date.add(i*14,'days')
+      bw[i] = @format_date_as_string(bwv)
+      
     $("#visit_1").val(bw[1])
     $("#visit_2").val(bw[2])
     $("#visit_3").val(bw[3])
     bi_weekly_fulllist(bw)
     $("#final-dose").html(final_dose)
-    bpMonitor()
-    hbMonitor()
+    bpMonitor(edd_projected)
+    hbMonitor(randomize_date, edd_projected)
     return
 
   @bi_weekly_fulllist: (bw) ->
     listing = "<table class='table'><thead><tr>"
     listing += "<th id='visit_no'>" + curLang.visitNo +"</th><th class='visit_planned''>"+curLang.plannedDate+"</th>"
     listing += "</tr></thead><tbody>"
-    for (var i= 1; i< 16; i++)
+    for i in [1..15]
       listing += "<tr><td>"+i +"</td><td>" + bw[i] + "</td></tr>"
     listing += "</tbody></table>"
     $("#listings").html(listing)
-     
+
+  bpMonitor: (eddProj) ->
+    bp = []
+    bp[0] = ""
+    bp[1] = format_date_as_string(eddProj.subtract(24*7,'days')) +"<br/>"+ format_date_as_string(eddProj.subtract(20*7,'days'))
+    bp[2] = format_date_as_string(eddProj.subtract(12*7, 'days')) +"<br/>"+ format_date_as_string(eddProj.subtract(10*7,'days'))
+    bp[3] = format_date_as_string(eddProj.subtract(6*7, 'days'))
+    bp[4] = format_date_as_string(eddProj.subtract(4*7, 'days'))
+    bp[5] = format_date_as_string(eddProj.subtract(2*7, 'days'))
+    bp[6] = format_date_as_string(eddProj)
+    bp[7] = format_date_as_string(eddProj.add(2*7,'days'))
+    for i in [1..7]
+      $("#bp_"+i).html(bp[i]);
+
+  hbMonitor: (randomizeDate, eddProj) ->
+    hb = []
+    hb[0] = ""
+    hb[1] = format_date_as_string(randomizeDate.add(4*7, 'days'))
+    hb[2] = format_date_as_string(eddProj.subtract(14*7, 'days'))+"<br/>"+ format_date_as_string(eddProj.subtract(10*7,'days'))
+    $("#hb_1").html(hb[1])
+    $("#hb_2").html(hb[2])
+  
 module.exports = Common

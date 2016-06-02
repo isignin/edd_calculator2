@@ -79,7 +79,7 @@ class ResultView extends Backbone.View
       $('#gestational_age_proj').val(Common.getGestationalAgeStr(ga_proj))
       $('#edd_projected').val(Common.format_date_as_string(edd_projected))
       $('#last_randomization_date').val(Common.format_date_as_string(last_day_to_randomize))
-  	  biweekly_visits()
-    }
+  	  Common.biweekly_visits
+        edd_projected: edd_projected
     
 module.exports = ResultView
