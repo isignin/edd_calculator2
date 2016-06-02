@@ -24,11 +24,13 @@ global.Env =
   LMPOnly: false	
 
 Env.currentDate = moment().format(Env.dateFormat)
-console.log(Env)
-debugger
+
 # These are the views that will always be shown
 menuView = new MenuView
 menuView.render()
+
+dashboardView = new DashboardView
+dashboardView.render()
 
 alertView = new AlertView
 alertView.render()

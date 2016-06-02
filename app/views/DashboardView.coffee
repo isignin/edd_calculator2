@@ -5,26 +5,28 @@ Backbone.$  = $
 moment = require 'moment'
 Pikaday = require 'pikaday'
 Common = require '../Common'
-
+      
 class DashboardView extends Backbone.View
-  App =
-#    curLang: Common.languageSwitch(Env.currentLang)
-    edd_projected: ""
-    us_date: ""
-    ga_us_weeks: ""
-    ga_us_days: ""
-    lmp_date: ""
-    randomize_date: ""
-    edd_lmp: ""
-    edd_us: ""
-    lmp_us: ""
-    ga_lmp: ""
-    ga_us: ""
-    ga_us_proj: ""
-    ga_final: ""
-    edd_lmp_only: ""
-    eligible: ""
-    version: ""
+  initialize: =>
+    global.App = 
+      edd_projected: "Test"
+      us_date: ""
+      ga_us_weeks: ""
+      ga_us_days: ""
+      lmp_date: ""
+      randomize_date: ""
+      edd_lmp: ""
+      edd_us: ""
+      lmp_us: ""
+      ga_lmp: ""
+      ga_us: ""
+      ga_us_proj: ""
+      ga_final: ""
+      edd_lmp_only: ""
+      eligible: ""
+      version: ""
+      curLang: Common.languageSwitch(Env.currentLang)
+
    
   el: "#content"
 
