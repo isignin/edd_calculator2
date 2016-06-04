@@ -5,7 +5,8 @@ Backbone.$  = $
 moment = require 'moment'
 Pikaday = require 'pikaday'
 Common = require '../Common'
-      
+AlertView = require './AlertView'
+
 class DashboardView extends Backbone.View
   initialize: =>
     global.App = 
@@ -105,86 +106,86 @@ class DashboardView extends Backbone.View
 
   render: =>
     @$el.html "
-      <div id='inputBlock'>
-        <div class='col-xs-5 col-md-5' id='leftBlock'>
-          <div class='question-block'>
-            <div class='question' id='today'>Today's Date: </div>
-            <input type='text' id='current_date' readonly>
-          </div>
-          <div class='question-block'>
-            <div class='question' id='LMPDate'>Date of LMP: </div>
-            <div class='aspQ'>(ASP01 Q.A7 <span class='word-or'>or</span> ASP05 Q.A1)</div>
-            <input type='text' id='lmp_date' class='datepicker'><br />
-            <input type='checkbox' id='lmp_date_unknown'> <span id='unknown'>Unknown</span>
-          </div>
-          <div class='fullCalculator'>
+      <div>
+        <div class='row'>
+          <div class='col-xs-5 col-md-5' id='leftBlock'>
             <div class='question-block'>
-              <div class='question' id='USDate'>Date of US Exam: </div>
-              <div class='aspQ'>(ASP05 Q.B1)</div>
-              <input type='text' id='us_date' class='datepicker'>
+              <div class='question' id='today'>Today's Date: </div>
+              <input type='text' id='current_date' readonly>
             </div>
             <div class='question-block'>
-              <div class='question' id='GA-US'>GA by US: </div>
-              <div class='aspQ'>(ASP05 Q.B2)</div>
-              <input type='number' id='ga_us_weeks' class='gestational_us' min='6' max='14'> <span id='labelWeeks'>Weeks</span> 
-              <input type='number' id='ga_us_days' class='gestational_us' min='0' max='6'> <span id='labelDays'>Days</span>
-            </div>
-            <div class='question-block'>
-                <div class='question' id='DateRandomization'>Date of Randomization: </div>
-                <div class='aspQ'>(ASP05 Q.C1)</div>
-                <input type='text' id='randomize_date' class='datepicker'>
-            </div>
-          </div>
-          <div class='question-block'>	 
-            <button id='calculate' class='btn btn-warning'>Calculate</button>&nbsp 
-            <button id='clear' class='btn btn-success'>Clear</button>
-          </div>
-        </div>
-      </div>
-      <div id='resultBlock'>
-        <div class='col-xs-7 col-md-6'>
-          <div id='calc_result'>   
-            <h3 id='results'>Results: </h3>	
-            <div class='result-block'>
-              <div class='question'><span id='resultLabel1'>EDD by LMP</span>: <span class='aspQ'>(ASP01 Q.A8)</span></div>
-              <input id='edd_lmp' class='result_input' readonly>
-            </div>
-            <div class='result-block' id='ga_lmp_section'>
-              <div class='question'><span id='resultLabel2'>GA by LMP:</span></div>
-              <input id='ga_lmp' class='result_input' readonly>
+              <div class='question' id='LMPDate'>Date of LMP: </div>
+              <div class='aspQ'>(ASP01 Q.A7 <span class='word-or'>or</span> ASP05 Q.A1)</div>
+              <input type='text' id='lmp_date' class='datepicker'><br />
+              <input type='checkbox' id='lmp_date_unknown'> <span id='unknown'>Unknown</span>
             </div>
             <div class='fullCalculator'>
-              <div class='result-block'>
-                <div class='question'><span id='resultLabel3'>Projected EDD:</span> <span class='aspQ'>(ASP05 Q.C3)</span></div>
-                <input id='edd_projected' class='result_input' readonly>
-              </div>		 
-              <div class='result-block'>
-                <div class='question'><span id='resultLabel4'>GA by Projected EDD</span>: <span class='aspQ'>(ASP05 Q.C4)</span></div>
-                <input id='gestational_age_proj' class='result_input' readonly>
-              </div> 
-              <div class='result-block'>
-                <div class='question'><span id='resultLabel5'>Last Date to Randomize</span>:<br /> 
-                  <span class='aspQ'>(ASP05 Q.C5)</span>
-                </div>
-                <input id='last_randomization_date' class='result_input' readonly>
+              <div class='question-block'>
+                <div class='question' id='USDate'>Date of US Exam: </div>
+                <div class='aspQ'>(ASP05 Q.B1)</div>
+                <input type='text' id='us_date' class='datepicker'>
               </div>
-              <div class='result-block'>
-                  <div class='question'><span id='resultLabel6'>Bi-Weekly Visits: </span> <a data-toggle='modal' data-target='#visitsModal'><img src='images/dates-list.png' id='full-list' title='Full List'></a></div>
-                  <div><span class='aspQ'>(ASP05 Q.C9 <span class='word-and'>and</span> <span id='participant'>Participant ID Card</span>)</span></div>
-                  <b><span class='labelVisit'>Visit</span> 1: </b><input id='visit_1' class='result_input visits' readonly><br />
-                  <b><span class='labelVisit'>Visit</span> 2: </b><input id='visit_2' class='result_input visits' readonly><br />
-                  <b><span class='labelVisit'>Visit</span> 3: </b><input id='visit_3' class='result_input visits' readonly>
+              <div class='question-block'>
+                <div class='question' id='GA-US'>GA by US: </div>
+                <div class='aspQ'>(ASP05 Q.B2)</div>
+                <input type='number' id='ga_us_weeks' class='gestational_us' min='6' max='14'> <span id='labelWeeks'>Weeks</span> 
+                <input type='number' id='ga_us_days' class='gestational_us' min='0' max='6'> <span id='labelDays'>Days</span>
               </div>
-              <div class='result-block'>
-                <div><strong><span id='resultLabel8'>Eligibility</span>:</strong> <span class='aspQ'>(ASP05 Q.C6 <span class='word-and'>and</span> ASP05 Q.C7)</span></div> 
-                <div id='eligible-msg'> 
-                  <div id='eligibility'> </div>
-                  <div id='patient-kit'> </div>
-                </div>	
+              <div class='question-block'>
+                  <div class='question' id='DateRandomization'>Date of Randomization: </div>
+                  <div class='aspQ'>(ASP05 Q.C1)</div>
+                  <input type='text' id='randomize_date' class='datepicker'>
               </div>
             </div>
+            <div class='question-block'>	 
+              <button id='calculate' class='btn btn-warning'>Calculate</button>&nbsp 
+              <button id='clear' class='btn btn-success'>Clear</button>
+            </div>
           </div>
-          <div class='col-xs-1 col-md-1'></div>  
+          <div class='col-xs-7 col-md-6'>
+            <div id='calc_result'>   
+              <h3 id='results'>Results: </h3>	
+              <div class='result-block'>
+                <div class='question'><span id='resultLabel1'>EDD by LMP</span>: <span class='aspQ'>(ASP01 Q.A8)</span></div>
+                <input id='edd_lmp' class='result_input' readonly>
+              </div>
+              <div class='result-block' id='ga_lmp_section'>
+                <div class='question'><span id='resultLabel2'>GA by LMP:</span></div>
+                <input id='ga_lmp' class='result_input' readonly>
+              </div>
+              <div class='fullCalculator'>
+                <div class='result-block'>
+                  <div class='question'><span id='resultLabel3'>Projected EDD:</span> <span class='aspQ'>(ASP05 Q.C3)</span></div>
+                  <input id='edd_projected' class='result_input' readonly>
+                </div>		 
+                <div class='result-block'>
+                  <div class='question'><span id='resultLabel4'>GA by Projected EDD</span>: <span class='aspQ'>(ASP05 Q.C4)</span></div>
+                  <input id='gestational_age_proj' class='result_input' readonly>
+                </div> 
+                <div class='result-block'>
+                  <div class='question'><span id='resultLabel5'>Last Date to Randomize</span>:<br /> 
+                    <span class='aspQ'>(ASP05 Q.C5)</span>
+                  </div>
+                  <input id='last_randomization_date' class='result_input' readonly>
+                </div>
+                <div class='result-block'>
+                    <div class='question'><span id='resultLabel6'>Bi-Weekly Visits: </span> <a data-toggle='modal' data-target='#visitsModal'><img src='images/dates-list.png' id='full-list' title='Full List'></a></div>
+                    <div><span class='aspQ'>(ASP05 Q.C9 <span class='word-and'>and</span> <span id='participant'>Participant ID Card</span>)</span></div>
+                    <b><span class='labelVisit'>Visit</span> 1: </b><input id='visit_1' class='result_input visits' readonly><br />
+                    <b><span class='labelVisit'>Visit</span> 2: </b><input id='visit_2' class='result_input visits' readonly><br />
+                    <b><span class='labelVisit'>Visit</span> 3: </b><input id='visit_3' class='result_input visits' readonly>
+                </div>
+                <div class='result-block'>
+                  <div><strong><span id='resultLabel8'>Eligibility</span>:</strong> <span class='aspQ'>(ASP05 Q.C6 <span class='word-and'>and</span> ASP05 Q.C7)</span></div> 
+                  <div id='eligible-msg'> 
+                    <div id='eligibility'> </div>
+                    <div id='patient-kit'> </div>
+                  </div>	
+                </div>
+              </div>
+            </div>
+            <div class='col-xs-1 col-md-1'></div>  
+          </div>
         </div>
       </div>
     "

@@ -110,7 +110,7 @@ button#initial, button#randomization {
 }
 
 .spacer {
-    clear: both;
+  clear: both;
 }
 #calc-type {
 	margin: -10px 0 10px;
