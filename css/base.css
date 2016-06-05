@@ -41,7 +41,11 @@ label[for='toggle-all'] {
 }
 
 #leftBlock {
-   padding-top: 40px;	
+   padding-top: 20px;	
+}
+
+#alertBlock {
+   margin-top: 35px;  
 }
 
 .question-block {
@@ -146,7 +150,7 @@ td.schedule {
 }
 
 div#logo {
-	margin-top: 40px;
+	margin-top: 30px;
 }
 
 #main_title {
@@ -156,10 +160,10 @@ div#logo {
 }
 
 #errorAlert{
-	margin: 20px;
   padding: 7px;
 	border: 1px solid red;
 	display: none;
+  margin-bottom: 0px;
 }
 
 h3#results {

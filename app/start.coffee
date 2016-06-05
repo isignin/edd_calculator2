@@ -15,7 +15,7 @@ Router = require './Router'
 MenuView = require "./views/MenuView"
 DashboardView = require './views/DashboardView'
 AlertView = require './views/AlertView'
-Common = require './Common'
+global.Common = require './Common'
 
 global.App = {}
 global.Env =  

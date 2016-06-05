@@ -59,15 +59,16 @@ class DashboardView extends Backbone.View
     App.edd_us = @convertToDate('#edd_us')
 	
   calculate: (e) =>
+    $("#errorAlert").hide()
     if(Env.LMPOnly)
       if ($('#lmp_date').val() != "")
         App.lmp_date =  @convertToDate('#lmp_date')
         App.edd_lmp = App.lmp_date.clone().add(280,'days')
-        App.ga_lmp = moment(current_date, Env.dateFormat).diff(App.lmp_date, 'days')
+        App.ga_lmp = Math.abs(moment(Env.currentDate, Env.dateFormat).diff(App.lmp_date, 'days'))
         $("#edd_lmp").val(Common.format_date_as_string(App.edd_lmp))
         $("#ga_lmp").val(Common.getGestationalAgeStr(App.ga_lmp))
       else
-        AlertView.displayErrorMsg(curLang.errorMsg9)
+        AlertView.displayErrorMsg(App.curLang.errorMsg9)
     else
       if (@validateInputs(App.curLang))
         if ($("#lmp_date_unknown").is(":checked"))
@@ -77,115 +78,105 @@ class DashboardView extends Backbone.View
         else
           App.lmp_date =  @convertToDate('#lmp_date')
           App.edd_lmp = App.lmp_date.clone().add(280,'days')
-          App.ga_lmp = moment(current_date).diff(lmp_date, 'days')
+          App.ga_lmp = Math.abs(moment(Env.currentDate, Env.DateFormat).diff(App.lmp_date, 'days'))
           $("#edd_lmp").val(Common.format_date_as_string(App.edd_lmp))
           $("#ga_lmp").val(Common.getGestationalAgeStr(App.ga_lmp))
         App.ga_us = (parseInt($("#ga_us_weeks").val())*7)+parseInt($("#ga_us_days").val())
-        App.ga_us_proj = App.ga_us + moment(current_date, Env.dateFormat).diff(App.us_date, 'days')
+        App.ga_us_proj = App.ga_us + moment(Env.currentDate, Env.dateFormat).diff(App.us_date, 'days')
         App.lmp_us = App.us_date
         App.lmp_us.subtract(App.ga_us, 'days')
         App.edd_us = App.lmp_us
         App.edd_us.add(280, 'days')
         $("#errorAlert").hide()
-        edd_choice_update()
-        eligibility()
+        @edd_choice_update()
+        Common.eligibility()
       else
         $(".result_input").val("")
         $("#errorAlert").show()
 
   clear: (e) =>
-    $(".result_input").val("")
-    $(".datepicker").val("")
-    $(".gestational_us").val("")
-    $("#eligibility").html("")
-    $("#patient-kit").html("")
-    $("#lmp_date_unknown").prop('checked', false)
-    $("#eligible-msg").hide()
-    $("#errorAlert").hide()
-    $("#no_dates").html(Env.currentLang.comment1)
+    Common.clearAll()
 
   render: =>
     @$el.html "
-      <div>
-        <div class='row'>
-          <div class='col-xs-5 col-md-5' id='leftBlock'>
+      <div class='row'>
+        <div class='col-xs-5 col-md-5' id='leftBlock'>
+          <div class='question-block'>
+            <div class='question' id='today'>Today's Date: </div>
+            <input type='text' id='current_date' readonly>
+          </div>
+          <div class='question-block'>
+            <div class='question' id='LMPDate'>Date of LMP: </div>
+            <div class='aspQ'>(ASP01 Q.A7 <span class='word-or'>or</span> ASP05 Q.A1)</div>
+            <input type='text' id='lmp_date' class='datepicker'><br />
+            <input type='checkbox' id='lmp_date_unknown'> <span id='unknown'>Unknown</span>
+          </div>
+          <div class='fullCalculator'>
             <div class='question-block'>
-              <div class='question' id='today'>Today's Date: </div>
-              <input type='text' id='current_date' readonly>
+              <div class='question' id='USDate'>Date of US Exam: </div>
+              <div class='aspQ'>(ASP05 Q.B1)</div>
+              <input type='text' id='us_date' class='datepicker'>
             </div>
             <div class='question-block'>
-              <div class='question' id='LMPDate'>Date of LMP: </div>
-              <div class='aspQ'>(ASP01 Q.A7 <span class='word-or'>or</span> ASP05 Q.A1)</div>
-              <input type='text' id='lmp_date' class='datepicker'><br />
-              <input type='checkbox' id='lmp_date_unknown'> <span id='unknown'>Unknown</span>
+              <div class='question' id='GA-US'>GA by US: </div>
+              <div class='aspQ'>(ASP05 Q.B2)</div>
+              <input type='number' id='ga_us_weeks' class='gestational_us' min='6' max='14'> <span id='labelWeeks'>Weeks</span> 
+              <input type='number' id='ga_us_days' class='gestational_us' min='0' max='6'> <span id='labelDays'>Days</span>
+            </div>
+            <div class='question-block'>
+                <div class='question' id='DateRandomization'>Date of Randomization: </div>
+                <div class='aspQ'>(ASP05 Q.C1)</div>
+                <input type='text' id='randomize_date' class='datepicker'>
+            </div>
+          </div>
+          <div class='question-block'>	 
+            <button id='calculate' class='btn btn-warning'>Calculate</button>&nbsp 
+            <button id='clear' class='btn btn-success'>Clear</button>
+          </div>
+        </div>
+        <div class='col-xs-7 col-md-6'>
+          <div id='calc_result'>   
+            <h3 id='results'>Results: </h3>	
+            <div class='result-block'>
+              <div class='question'><span id='resultLabel1'>EDD by LMP</span>: <span class='aspQ'>(ASP01 Q.A8)</span></div>
+              <input id='edd_lmp' class='result_input' readonly>
+            </div>
+            <div class='result-block' id='ga_lmp_section'>
+              <div class='question'><span id='resultLabel2'>GA by LMP:</span></div>
+              <input id='ga_lmp' class='result_input' readonly>
             </div>
             <div class='fullCalculator'>
-              <div class='question-block'>
-                <div class='question' id='USDate'>Date of US Exam: </div>
-                <div class='aspQ'>(ASP05 Q.B1)</div>
-                <input type='text' id='us_date' class='datepicker'>
-              </div>
-              <div class='question-block'>
-                <div class='question' id='GA-US'>GA by US: </div>
-                <div class='aspQ'>(ASP05 Q.B2)</div>
-                <input type='number' id='ga_us_weeks' class='gestational_us' min='6' max='14'> <span id='labelWeeks'>Weeks</span> 
-                <input type='number' id='ga_us_days' class='gestational_us' min='0' max='6'> <span id='labelDays'>Days</span>
-              </div>
-              <div class='question-block'>
-                  <div class='question' id='DateRandomization'>Date of Randomization: </div>
-                  <div class='aspQ'>(ASP05 Q.C1)</div>
-                  <input type='text' id='randomize_date' class='datepicker'>
-              </div>
-            </div>
-            <div class='question-block'>	 
-              <button id='calculate' class='btn btn-warning'>Calculate</button>&nbsp 
-              <button id='clear' class='btn btn-success'>Clear</button>
-            </div>
-          </div>
-          <div class='col-xs-7 col-md-6'>
-            <div id='calc_result'>   
-              <h3 id='results'>Results: </h3>	
               <div class='result-block'>
-                <div class='question'><span id='resultLabel1'>EDD by LMP</span>: <span class='aspQ'>(ASP01 Q.A8)</span></div>
-                <input id='edd_lmp' class='result_input' readonly>
+                <div class='question'><span id='resultLabel3'>Projected EDD:</span> <span class='aspQ'>(ASP05 Q.C3)</span></div>
+                <input id='edd_projected' class='result_input' readonly>
+              </div>		 
+              <div class='result-block'>
+                <div class='question'><span id='resultLabel4'>GA by Projected EDD</span>: <span class='aspQ'>(ASP05 Q.C4)</span></div>
+                <input id='gestational_age_proj' class='result_input' readonly>
+              </div> 
+              <div class='result-block'>
+                <div class='question'><span id='resultLabel5'>Last Date to Randomize</span>:<br /> 
+                  <span class='aspQ'>(ASP05 Q.C5)</span>
+                </div>
+                <input id='last_randomization_date' class='result_input' readonly>
               </div>
-              <div class='result-block' id='ga_lmp_section'>
-                <div class='question'><span id='resultLabel2'>GA by LMP:</span></div>
-                <input id='ga_lmp' class='result_input' readonly>
+              <div class='result-block'>
+                  <div class='question'><span id='resultLabel6'>Bi-Weekly Visits: </span> <a data-toggle='modal' data-target='#visitsModal'><img src='images/dates-list.png' id='full-list' title='Full List'></a></div>
+                  <div><span class='aspQ'>(ASP05 Q.C9 <span class='word-and'>and</span> <span id='participant'>Participant ID Card</span>)</span></div>
+                  <b><span class='labelVisit'>Visit</span> 1: </b><input id='visit_1' class='result_input visits' readonly><br />
+                  <b><span class='labelVisit'>Visit</span> 2: </b><input id='visit_2' class='result_input visits' readonly><br />
+                  <b><span class='labelVisit'>Visit</span> 3: </b><input id='visit_3' class='result_input visits' readonly>
               </div>
-              <div class='fullCalculator'>
-                <div class='result-block'>
-                  <div class='question'><span id='resultLabel3'>Projected EDD:</span> <span class='aspQ'>(ASP05 Q.C3)</span></div>
-                  <input id='edd_projected' class='result_input' readonly>
-                </div>		 
-                <div class='result-block'>
-                  <div class='question'><span id='resultLabel4'>GA by Projected EDD</span>: <span class='aspQ'>(ASP05 Q.C4)</span></div>
-                  <input id='gestational_age_proj' class='result_input' readonly>
-                </div> 
-                <div class='result-block'>
-                  <div class='question'><span id='resultLabel5'>Last Date to Randomize</span>:<br /> 
-                    <span class='aspQ'>(ASP05 Q.C5)</span>
-                  </div>
-                  <input id='last_randomization_date' class='result_input' readonly>
-                </div>
-                <div class='result-block'>
-                    <div class='question'><span id='resultLabel6'>Bi-Weekly Visits: </span> <a data-toggle='modal' data-target='#visitsModal'><img src='images/dates-list.png' id='full-list' title='Full List'></a></div>
-                    <div><span class='aspQ'>(ASP05 Q.C9 <span class='word-and'>and</span> <span id='participant'>Participant ID Card</span>)</span></div>
-                    <b><span class='labelVisit'>Visit</span> 1: </b><input id='visit_1' class='result_input visits' readonly><br />
-                    <b><span class='labelVisit'>Visit</span> 2: </b><input id='visit_2' class='result_input visits' readonly><br />
-                    <b><span class='labelVisit'>Visit</span> 3: </b><input id='visit_3' class='result_input visits' readonly>
-                </div>
-                <div class='result-block'>
-                  <div><strong><span id='resultLabel8'>Eligibility</span>:</strong> <span class='aspQ'>(ASP05 Q.C6 <span class='word-and'>and</span> ASP05 Q.C7)</span></div> 
-                  <div id='eligible-msg'> 
-                    <div id='eligibility'> </div>
-                    <div id='patient-kit'> </div>
-                  </div>	
-                </div>
+              <div class='result-block'>
+                <div><strong><span id='resultLabel8'>Eligibility</span>:</strong> <span class='aspQ'>(ASP05 Q.C6 <span class='word-and'>and</span> ASP05 Q.C7)</span></div> 
+                <div id='eligible-msg'> 
+                  <div id='eligibility'> </div>
+                  <div id='patient-kit'> </div>
+                </div>	
               </div>
             </div>
-            <div class='col-xs-1 col-md-1'></div>  
           </div>
+          <div class='col-xs-1 col-md-1'></div>  
         </div>
       </div>
     "
@@ -210,7 +201,8 @@ class DashboardView extends Backbone.View
     $('#current_date').val(Env.currentDate)
 
   convertToDate: (cdate) ->
-    moment($(cdate).val(), Env.dateFormat) 
+    convDate = $(cdate).val()
+    moment(convDate, Env.dateFormat)
 
   validateInputs: (curLang) ->
     valid_input = true
@@ -220,7 +212,8 @@ class DashboardView extends Backbone.View
       errMsg = errMsg + "[ #{curLang.errorMsg2} ] "
     else
       App.us_date = @convertToDate('#us_date')
-      if (App.us_date.isAfter(moment(current_date),'day')) then errMsg = errMsg + "[ #{curLang.errorMsg6} ]"
+      current_date = moment(Env.currentDate, Env.dateFormat)
+      if (App.us_date.isAfter(current_date,'day')) then errMsg = errMsg + "[ #{curLang.errorMsg6} ]"
 
     if ($("#ga_us_weeks").val() == "" || $("#ga_us_days").val() == "")
       errMsg = errMsg + "[ #{curLang.errorMsg3} ] "
@@ -237,7 +230,7 @@ class DashboardView extends Backbone.View
       errMsg = errMsg + "[ #{curLang.errorMsg4} ] "
     else
       App.randomize_date = @convertToDate('#randomize_date')
-      if (moment(current_date, Env.dateFormat).isAfter(moment(App.randomize_date),'day')) then errMsg = errMsg + "[ #{curLang.errorMsg5} ]" 
+      if (moment(Env.currentDate, Env.dateFormat).isAfter(moment(App.randomize_date),'day')) then errMsg = errMsg + "[ #{curLang.errorMsg5} ]" 
 
     if (errMsg !="")
       valid_input = false
@@ -257,14 +250,11 @@ class DashboardView extends Backbone.View
         when (lmp_gestational_week >= 9 && lmp_gestational_week < 14)
           App.edd_projected = if(days_diff <= 7) then App.edd_lmp else App.edd_us
         else App.edd_projected = App.edd_us
-
     App.ga_proj = if (App.edd_projected == App.edd_us) then App.ga_us_proj else App.ga_lmp
-    last_day_to_randomize = App.edd_projected.subtract(183, 'days').format('DD-MM-YYYY')
+    last_day_to_randomize = App.edd_projected.clone().subtract(183, 'days')
     $('#gestational_age_proj').val(Common.getGestationalAgeStr(App.ga_proj))
-    $('#edd_projected').val(Common.format_date_as_string(App.edd_projected))
-    $('#last_randomization_date').val(Common.format_date_as_string(last_day_to_randomize))
-    console.log(App.edd_projected)
-    debugger
+    $('#edd_projected').val(App.edd_projected.format(Env.dateFormat))
+    $('#last_randomization_date').val(moment(last_day_to_randomize).format(Env.dateFormat))
     Common.biweekly_visits
       edd_projected: App.edd_projected
       randomize_date: App.randomize_date

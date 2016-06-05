@@ -18,11 +18,13 @@ class MenuView extends Backbone.View
     "click img#help": "help"
           
   initial: (e) ->
+    Common.clearAll()
     $(".fullCalculator").slideUp()
     $("#ga_lmp_section").show()
     Env.LMPOnly = true
 
   randomization: (e) ->
+    Common.clearAll()
     $(".fullCalculator").slideDown()
     $("#ga_lmp_section").hide()
     Env.LMPOnly = false
