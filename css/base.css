@@ -48,6 +48,11 @@ label[for='toggle-all'] {
    margin-top: 35px;  
 }
 
+#helpBlock {
+  top: 5%;
+  display: none;
+}
+
 .question-block {
 	padding:10px 0px;
 }

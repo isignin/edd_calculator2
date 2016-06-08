@@ -78,14 +78,14 @@ class DashboardView extends Backbone.View
         else
           App.lmp_date =  @convertToDate('#lmp_date')
           App.edd_lmp = App.lmp_date.clone().add(280,'days')
-          App.ga_lmp = Math.abs(moment(Env.currentDate, Env.DateFormat).diff(App.lmp_date, 'days'))
+          App.ga_lmp = Math.abs(moment(Env.currentDate, Env.dateFormat).diff(App.lmp_date, 'days'))
           $("#edd_lmp").val(Common.format_date_as_string(App.edd_lmp))
           $("#ga_lmp").val(Common.getGestationalAgeStr(App.ga_lmp))
         App.ga_us = (parseInt($("#ga_us_weeks").val())*7)+parseInt($("#ga_us_days").val())
         App.ga_us_proj = App.ga_us + moment(Env.currentDate, Env.dateFormat).diff(App.us_date, 'days')
-        App.lmp_us = App.us_date
+        App.lmp_us = App.us_date.clone()
         App.lmp_us.subtract(App.ga_us, 'days')
-        App.edd_us = App.lmp_us
+        App.edd_us = App.lmp_us.clone()
         App.edd_us.add(280, 'days')
         $("#errorAlert").hide()
         @edd_choice_update()

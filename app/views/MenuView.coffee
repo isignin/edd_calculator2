@@ -4,6 +4,7 @@ Backbone = require 'backbone'
 Backbone.$  = $
 Cookies = require 'js-cookie'
 Common = require '../Common'
+HelpView = require './HelpView'
 
 class MenuView extends Backbone.View
   el: "#menuHeader"
@@ -47,7 +48,9 @@ class MenuView extends Backbone.View
     window.location.reload()
 	
   help: (e) =>
-    e.preventDefault	
+    e.preventDefault
+    App.HelpView = new HelpView() unless App.HelpView
+    App.HelpView.render()	
       
   changeLanguage: (lang) ->
     $("#spanish").show()
