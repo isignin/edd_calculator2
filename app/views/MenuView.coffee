@@ -66,7 +66,6 @@ class MenuView extends Backbone.View
     Env.currentLang = lang;
     App.curLang = Common.languageSwitch(lang)
     @languageDisplay(App.curLang)
-    $("#html-text").load("help-#{lang.lowercase}.html");
 
   render: =>
     @$el.html "

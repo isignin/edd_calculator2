@@ -48,7 +48,7 @@ label[for='toggle-all'] {
    margin-top: 35px;  
 }
 
-#helpBlock {
+#helpBlock, #listing {
   top: 5%;
   display: none;
 }

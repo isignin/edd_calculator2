@@ -6,6 +6,7 @@ moment = require 'moment'
 Pikaday = require 'pikaday'
 Common = require '../Common'
 AlertView = require './AlertView'
+SchedulesView = require './SchedulesView'
 
 class DashboardView extends Backbone.View
   initialize: =>
@@ -38,6 +39,7 @@ class DashboardView extends Backbone.View
     "change #lmp_date": "convertLMPDate"
     "change #lmp_date_unknown": "lmpDateUnknown"
     "change #edd_us": "eddUS"
+    "click img#full-list": "ScheduleList"
     
   convertRandomizeDate: (e) ->
     if($("#randomize_date").val() != "" ) then App.randomize_date = @convertToDate('#randomize_date')
@@ -58,6 +60,11 @@ class DashboardView extends Backbone.View
   eddUS: (e) ->
     App.edd_us = @convertToDate('#edd_us')
 	
+  ScheduleList: (e) =>
+    e.preventDefault
+    App.SchedulesView = new SchedulesView() unless App.SchedulesView
+    App.SchedulesView.render()
+    
   calculate: (e) =>
     $("#errorAlert").hide()
     if(Env.LMPOnly)

@@ -2,13 +2,12 @@ class HelpView extends Backbone.View
   el: "#helpBlock"
   
   events:
-    "click img.close": "closeHelp"
+    "click button.close": "closeHelp"
 
-  closeAlert: (e) =>
+  closeHelp: (e) =>
     e.preventDefault
     $('#helpBlock').hide()
 
-      
   render: =>
     helpText = switch App.curLang.name
       when 'En' then helpEn
