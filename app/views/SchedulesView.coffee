@@ -1,3 +1,5 @@
+Common = require '../Common'
+
 class SchedulesView extends Backbone.View
   el: "#listing"
   
@@ -73,5 +75,9 @@ class SchedulesView extends Backbone.View
         </div>
       </div>
     "
+    Common.bi_weekly_fulllist
+      bw: App.bw
+      edd_projected: App.edd_projected
+      randomize_date: App.randomize_date
     
 module.exports = SchedulesView

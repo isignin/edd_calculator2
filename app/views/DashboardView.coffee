@@ -132,7 +132,7 @@ class DashboardView extends Backbone.View
             </div>
             <div class='question-block'>
                 <div class='question' id='DateRandomization'>Date of Randomization: </div>
-                <div class='aspQ'>(ASP05 Q.C1)</div>
+                <div class='aspQ'>(ASP05 Q.C2)</div>
                 <input type='text' id='randomize_date' class='datepicker'>
             </div>
           </div>
