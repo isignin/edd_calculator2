@@ -184,6 +184,12 @@ h3#results {
   float: right;	
 }
 
+img#key {
+  width: 34px;
+  height: 34px;
+  cursor: pointer;
+}
+
 img#help, #english, #french, #spanish {
 	float: left;
 	margin: -20px 0px 20px 5px;
@@ -274,6 +280,15 @@ img#full-list {
 }
 .border-1 {
 	border: 1px solid;
+}
+
+div#errMsg {
+  color: red;
+}
+
+.modal-login {
+  width: 350px;
+  margin: 200px auto;
 }
 
 /*

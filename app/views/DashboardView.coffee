@@ -7,6 +7,7 @@ Pikaday = require 'pikaday'
 Common = require '../Common'
 AlertView = require './AlertView'
 SchedulesView = require './SchedulesView'
+LoginView = require './LoginView'
 
 class DashboardView extends Backbone.View
   initialize: =>
@@ -40,6 +41,12 @@ class DashboardView extends Backbone.View
     "change #lmp_date_unknown": "lmpDateUnknown"
     "change #edd_us": "eddUS"
     "click img#full-list": "ScheduleList"
+    "click img#key": "login"
+  
+  login: (e) ->
+    e.preventDefault
+    App.LoginView = new LoginView() unless App.LoginView
+    App.LoginView.render()
     
   convertRandomizeDate: (e) ->
     if($("#randomize_date").val() != "" ) then App.randomize_date = @convertToDate('#randomize_date')
@@ -110,19 +117,19 @@ class DashboardView extends Backbone.View
         <div class='col-xs-5 col-md-5' id='leftBlock'>
           <div class='question-block'>
             <div class='question' id='today'>Today's Date: </div>
-            <input type='text' id='current_date' readonly>
+            <input type='text' id='current_date' class='datepicker' readonly><span><a data-toggle='modal' data-target='#loginModal'><img src='images/key-icon.png'  id='key' title='Admin unlock'></a></span>
           </div>
           <div class='question-block'>
             <div class='question' id='LMPDate'>Date of LMP: </div>
             <div class='aspQ'>(ASP01 Q.A7 <span class='word-or'>or</span> ASP05 Q.A1)</div>
-            <input type='text' id='lmp_date' class='datepicker'><br />
+            <input type='text' id='lmp_date' class='datepicker' readonly><br />
             <input type='checkbox' id='lmp_date_unknown'> <span id='unknown'>Unknown</span>
           </div>
           <div class='fullCalculator'>
             <div class='question-block'>
               <div class='question' id='USDate'>Date of US Exam: </div>
               <div class='aspQ'>(ASP05 Q.B1)</div>
-              <input type='text' id='us_date' class='datepicker'>
+              <input type='text' id='us_date' class='datepicker' readonly>
             </div>
             <div class='question-block'>
               <div class='question' id='GA-US'>GA by US: </div>
@@ -133,7 +140,7 @@ class DashboardView extends Backbone.View
             <div class='question-block'>
                 <div class='question' id='DateRandomization'>Date of Randomization: </div>
                 <div class='aspQ'>(ASP05 Q.C2)</div>
-                <input type='text' id='randomize_date' class='datepicker'>
+                <input type='text' id='randomize_date' class='datepicker' readonly>
             </div>
           </div>
           <div class='question-block'>	 
@@ -187,24 +194,30 @@ class DashboardView extends Backbone.View
         </div>
       </div>
     "
+    # global.currentDatePicker = new Pikaday
+#       field: $('.datepicker')[0]
+#       position: 'bottom right'
+#       format: 'DD-MM-YYYY'
+#       reposition: false
+      
     lmpDatePicker = new Pikaday
-      field: $('.datepicker')[0]
-      position: 'bottom right'
-      format: 'DD-MM-YYYY'
-      reposition: false
-
-    usDatePicker = new Pikaday
       field: $('.datepicker')[1]
       position: 'bottom right'
       format: 'DD-MM-YYYY'
       reposition: false
 
-    randomizeDatePicker = new Pikaday
+    usDatePicker = new Pikaday
       field: $('.datepicker')[2]
       position: 'bottom right'
       format: 'DD-MM-YYYY'
       reposition: false
 
+    randomizeDatePicker = new Pikaday
+      field: $('.datepicker')[3]
+      position: 'bottom right'
+      format: 'DD-MM-YYYY'
+      reposition: false
+      
     $('#current_date').val(Env.currentDate)
 
   convertToDate: (cdate) ->
@@ -237,6 +250,7 @@ class DashboardView extends Backbone.View
       errMsg = errMsg + "[ #{curLang.errorMsg4} ] "
     else
       App.randomize_date = @convertToDate('#randomize_date')
+      Env.currentDate = @convertToDate('#current_date')
       if (moment(Env.currentDate, Env.dateFormat).isAfter(moment(App.randomize_date),'day')) then errMsg = errMsg + "[ #{curLang.errorMsg5} ]" 
 
     if (errMsg !="")
